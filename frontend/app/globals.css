@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans), system-ui, "Segoe UI", Roboto, sans-serif;
+}
+
+/* A light, print-friendly look: engineers often print or save designs as PDF. */
+:root {
+  color-scheme: light;
+}
+
+@media print {
+  header nav, footer, button { display: none !important; }
+  body { background: white; }
+}

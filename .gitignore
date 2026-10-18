@@ -1,0 +1,21 @@
+# dependencies and build output
+node_modules/
+dist/
+.next/
+out/
+coverage/
+
+# secrets: never commit real environment files (the .env.example files are committed)
+.env
+.env.*
+!.env.example
+
+# editors / OS
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
+*.tsbuildinfo
+.claude/

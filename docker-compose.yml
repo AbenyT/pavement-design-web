@@ -1,0 +1,21 @@
+# Local PostgreSQL for development and tests (production uses Supabase).
+# Start:  docker compose up -d        Stop:  docker compose down
+# Connection: postgresql://pavement:pavement@localhost:5433/pavement
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pavement
+      POSTGRES_PASSWORD: pavement
+      POSTGRES_DB: pavement
+    ports:
+      - "5433:5432"   # 5433 on your PC, so it never clashes with another local PostgreSQL
+    volumes:
+      - pavement-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pavement"]
+      interval: 2s
+      retries: 30
+
+volumes:
+  pavement-db:

@@ -1,0 +1,65 @@
+// Prisma schema: the database tables for the pavement design web app.
+// Docs: https://pris.ly/d/prisma-schema
+//
+// DATABASE_URL: used by the running app  (Supabase "Session pooler" connection string)
+// DIRECT_URL:   used by `prisma migrate`   (Supabase direct connection, or the session pooler too —
+//               see README: Render is IPv4-only and Supabase's direct host is IPv6-only)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// An engineer who can sign in. Passwords are stored only as bcrypt hashes.
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  name         String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  projects     Project[]
+
+  @@map("users")
+}
+
+/// A road project, e.g. "Addis–Adama road, km 12–18". Belongs to one user.
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  location    String?
+  description String?
+  ownerId     String   @map("owner_id")
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  designs     Design[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([ownerId, updatedAt])
+  @@map("projects")
+}
+
+/// One AASHTO 1993 design saved under a project: the inputs, the full result,
+/// and summary columns so lists and the dashboard never need to open the JSON.
+model Design {
+  id               String   @id @default(uuid())
+  projectId        String   @map("project_id")
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name             String
+  inputs           Json     // DesignInput (camelCase), exactly as sent by the form
+  result           Json     // DesignResult from the engine at save time
+  adequate         Boolean
+  totalSn          Float    @map("total_sn")
+  requiredSn       Float    @map("required_sn")
+  totalThicknessMm Float    @map("total_thickness_mm")
+  layerCount       Int      @map("layer_count")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@index([projectId, updatedAt])
+  @@map("designs")
+}
