@@ -93,7 +93,7 @@ Tests: `cd backend && npm test` (engine parity, 68 tests) and `npm run test:e2e`
 The summary columns let lists and the dashboard work without opening the JSON.
 
 **Create the Supabase database**
-1. supabase.com → **New project**. Choose a region near your users and **save the database password**.
+1. supabase.com → **New project**. Region **Central EU (Frankfurt)** (same as Render in `render.yaml`) and **save the database password**.
 2. Open the project → click **Connect** (top bar) → **Connection string** → **Session pooler**. Copy it:
    `postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres`
    (replace `[YOUR-PASSWORD]` with your database password).
