@@ -4,6 +4,14 @@ A web app for **AASHTO 1993 flexible pavement design**: engineers sign in, organ
 by project, design 3–5 layers with live per-layer checks, and export results to Excel or CSV.
 *Prepared by Abenezer Tilahun.*
 
+**Live app:** https://pavement-design-web-alpha.vercel.app  ·  **API:** https://pavement-design-api3.onrender.com/health
+
+| Part | Service | Updates |
+|---|---|---|
+| Frontend | Vercel project `pavement-design-web` (root `frontend`) | every push to `main` redeploys automatically |
+| Backend | Render web service `pavement-design-api3` (Frankfurt, root `backend`) | every push to `main` that changes `backend/` redeploys automatically |
+| Database | Supabase (Session pooler, EU) | migrations run automatically when the backend starts |
+
 ```
  Browser ──▶ frontend/  Next.js 16 (App Router, Tailwind)        → Vercel
                 │  fetch(NEXT_PUBLIC_API_URL + "/designs/calculate", …)   JWT in the Authorization header
