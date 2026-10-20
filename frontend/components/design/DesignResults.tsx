@@ -59,10 +59,6 @@ export function DesignResults({ result, inputs, stale, setThickness, setValidity
 
       <Card className={stale ? 'opacity-50' : ''}>
         <h2 className="font-semibold text-ink">Layer-by-layer design</h2>
-        <p className="mt-1 text-xs text-muted">
-          Each box shows the <strong className="text-ink">minimum thickness</strong>. Leave it empty to use it, or type your own
-          (250, 250mm, 25cm, 10in). The SN so far must reach the SN required on the layer below.
-        </p>
         <div className="-mx-5 mt-4 overflow-x-auto px-5 sm:-mx-6 sm:px-6">
           <table className="w-full min-w-[720px] text-sm">
             <thead>

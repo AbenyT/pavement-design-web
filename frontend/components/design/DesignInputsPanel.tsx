@@ -61,7 +61,6 @@ export function DesignInputsPanel({ inputs, result, update, setValidity }: Props
       </Section>
 
       <Section number={2} title="Pavement structure">
-        <p className="mb-3 text-xs text-muted">AC course, base and subbase are always included — a design has 3, 4 or 5 layers.</p>
         {([['useDbmLayer', 'DBM layer (Dense Bituminous Macadam) under the AC course'],
           ['useCappingLayer', 'Capping layer above the subgrade']] as const).map(([field, label]) => (
           <label key={field} className="mb-2 flex cursor-pointer items-start gap-2.5 text-sm text-ink">
