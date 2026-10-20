@@ -83,7 +83,7 @@ export function DesignInputsPanel({ inputs, result, update, setValidity }: Props
         </div>
         <p className="mb-3 text-xs text-muted">
           {inputs.mrMethod === 'cbr'
-            ? 'MR = 1500·CBR (CBR ≤ 5 %), else 145·17.6·CBR^0.64 psi — for base, subbase, capping and subgrade. The DBM is asphalt: its MR is always entered directly.'
+            ? 'MR = 1500·CBR (CBR ≤ 5 %), else 145·17.6·CBR^0.64 psi, for base, subbase, capping and subgrade. The DBM is asphalt: its MR is always entered directly.'
             : 'Enter each layer\'s resilient modulus in psi. The CBR shown is only an estimate.'}
         </p>
         <div className="space-y-3">
