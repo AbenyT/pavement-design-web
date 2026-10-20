@@ -1,34 +1,57 @@
-import type { Metadata } from 'next';
-import { Geist } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import localFont from 'next/font/local';
 import { Suspense } from 'react';
+import { AnnouncementBar } from '@/components/AnnouncementBar';
 import { AppHeader } from '@/components/AppHeader';
+import { HelpButton, SiteFooter } from '@/components/SiteFooter';
 import { AuthProvider } from '@/lib/auth';
+import { THEME_BOOT_SCRIPT } from '@/lib/theme-script';
 import './globals.css';
 
-const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
+// Both fonts are self-hosted from app/fonts/ (variable, Latin subset) and licensed under the
+// SIL Open Font License 1.1, which allows commercial use. Licence texts sit next to the files.
+const inter = localFont({
+  src: './fonts/InterVariable-latin.woff2', variable: '--font-inter', weight: '100 900', display: 'swap',
+  fallback: ['ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+});
+const jetbrains = localFont({
+  src: './fonts/JetBrainsMonoVariable-latin.woff2', variable: '--font-jetbrains', weight: '100 800', display: 'swap',
+  fallback: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+});
 
 export const metadata: Metadata = {
   title: { default: 'Pavement Design', template: '%s · Pavement Design' },
   description: 'AASHTO 1993 flexible pavement layer-by-layer design — prepared by Abenezer Tilahun',
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#e7e7e9' },
+    { media: '(prefers-color-scheme: dark)', color: '#141417' },
+  ],
+};
+
 /** Shown while the header (which reads the URL) is still loading on dynamic pages. */
 function HeaderFallback() {
-  return <div className="h-[60px] border-b border-slate-200 bg-white" />;
+  return <div className="h-16 border-b border-line/70" />;
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-slate-50 font-sans text-slate-900">
+    // data-theme is set by the boot script before React hydrates, hence suppressHydrationWarning.
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} h-full antialiased`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
+      <body className="flex min-h-full flex-col font-sans text-ink">
         <AuthProvider>
+          <AnnouncementBar />
           <Suspense fallback={<HeaderFallback />}>
             <AppHeader />
           </Suspense>
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">{children}</main>
-          <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
-            AASHTO 1993 Flexible Pavement Design · Prepared by Abenezer Tilahun
-          </footer>
+          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10">{children}</main>
+          <SiteFooter />
+          <HelpButton />
         </AuthProvider>
       </body>
     </html>

@@ -1,46 +1,55 @@
-// Small reusable UI pieces (Tailwind), so every page looks consistent.
+// Small reusable UI pieces (Tailwind + the design tokens in globals.css), so every page looks consistent.
 import Link from 'next/link';
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { Alert, ArrowLeft, CheckCircle, XCircle } from './icons';
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <section className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}>{children}</section>;
+  return <section className={`shadow-card rounded-2xl border border-line bg-surface p-5 sm:p-6 ${className}`}>{children}</section>;
 }
 
 export function PageTitle({ title, subtitle, actions }: { title: string; subtitle?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
-        {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
+    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div className="min-w-0">
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] text-ink sm:text-4xl">{title}</h1>
+        {subtitle && <div className="mt-2 text-sm text-muted">{subtitle}</div>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
   );
 }
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'secondary' | 'danger' };
-const BUTTON_STYLES = {
-  primary: 'bg-blue-700 text-white hover:bg-blue-800 disabled:bg-blue-300',
-  secondary: 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:text-slate-400',
-  danger: 'border border-red-300 bg-white text-red-700 hover:bg-red-50',
-};
-
-export function Button({ variant = 'primary', className = '', ...props }: ButtonProps) {
+/** "← Back" link above a page title. */
+export function BackLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <button
-      {...props}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition
-        disabled:cursor-not-allowed ${BUTTON_STYLES[variant]} ${className}`}
-    />
+    <p className="mb-3 text-sm">
+      <Link href={href} className="inline-flex items-center gap-1.5 text-muted transition hover:text-ink">
+        <ArrowLeft size={14} />{children}
+      </Link>
+    </p>
   );
 }
 
-export function ButtonLink({ href, children, variant = 'primary' }: { href: string; children: ReactNode; variant?: 'primary' | 'secondary' }) {
-  return (
-    <Link href={href} className={`inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium ${BUTTON_STYLES[variant]}`}>
-      {children}
-    </Link>
-  );
+type Variant = 'primary' | 'secondary' | 'danger' | 'light' | 'ghost-light';
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant };
+
+const BASE = 'inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition disabled:cursor-not-allowed';
+const BUTTON_STYLES: Record<Variant, string> = {
+  primary: 'bg-primary text-on-primary hover:bg-primary-hover disabled:opacity-40',
+  secondary: 'border border-line-strong bg-surface text-ink hover:bg-raised disabled:opacity-50',
+  danger: 'border border-line-strong bg-surface text-bad hover:bg-bad-soft',
+  // For use on photos / dark panels.
+  light: 'bg-white text-[#111113] hover:bg-white/90',
+  'ghost-light': 'border border-white/40 bg-white/10 text-white backdrop-blur hover:bg-white/20',
+};
+
+export function Button({ variant = 'primary', className = '', type = 'button', ...props }: ButtonProps) {
+  return <button type={type} {...props} className={`${BASE} ${BUTTON_STYLES[variant]} ${className}`} />;
+}
+
+export function ButtonLink({ href, children, variant = 'primary', className = '' }:
+  { href: string; children: ReactNode; variant?: Variant; className?: string }) {
+  return <Link href={href} className={`${BASE} ${BUTTON_STYLES[variant]} ${className}`}>{children}</Link>;
 }
 
 /** Shows one or more error messages from the API. */
@@ -48,17 +57,20 @@ export function ErrorBox({ messages, title = 'Something went wrong' }: { message
   if (!messages || (Array.isArray(messages) && messages.length === 0)) return null;
   const list = Array.isArray(messages) ? messages : [messages];
   return (
-    <div role="alert" className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
-      <p className="font-semibold">{title}</p>
-      <ul className="mt-1 list-disc pl-5">{list.map((m) => <li key={m}>{m}</li>)}</ul>
+    <div role="alert" className="mb-4 flex gap-3 rounded-2xl border border-bad/30 bg-bad-soft px-4 py-3 text-sm text-bad">
+      <Alert size={18} className="mt-0.5 shrink-0" />
+      <div>
+        <p className="font-semibold">{title}</p>
+        <ul className="mt-1 list-disc pl-5">{list.map((m) => <li key={m}>{m}</li>)}</ul>
+      </div>
     </div>
   );
 }
 
 export function Loading({ label = 'Loading…' }: { label?: string }) {
   return (
-    <div className="flex items-center justify-center gap-3 py-16 text-slate-500" aria-live="polite">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-blue-700" />
+    <div className="flex items-center justify-center gap-3 py-16 text-center text-sm text-muted" aria-live="polite">
+      <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-line-strong border-t-ink" />
       {label}
     </div>
   );
@@ -66,18 +78,22 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
 
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
-      <p className="font-medium text-slate-700">{title}</p>
-      {children && <div className="mt-3 text-sm text-slate-500">{children}</div>}
+    <div className="rounded-2xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+      <p className="font-medium text-ink">{title}</p>
+      {children && <div className="mt-3 text-sm text-muted">{children}</div>}
     </div>
   );
 }
 
 export function VerdictBadge({ adequate }: { adequate: boolean }) {
   return adequate
-    ? <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800">ADEQUATE</span>
-    : <span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">NOT ADEQUATE</span>;
+    ? <span className="inline-flex items-center gap-1 rounded-full bg-ok-soft px-2.5 py-0.5 text-xs font-semibold text-ok"><CheckCircle size={13} />ADEQUATE</span>
+    : <span className="inline-flex items-center gap-1 rounded-full bg-bad-soft px-2.5 py-0.5 text-xs font-semibold text-bad"><XCircle size={13} />NOT ADEQUATE</span>;
 }
 
 export const inputClass =
-  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/30';
+  'w-full rounded-xl border border-line-strong bg-surface px-3.5 py-2.5 text-sm text-ink placeholder:text-subtle transition focus:border-ink focus:outline-none focus:ring-4 focus:ring-[color-mix(in_srgb,var(--ink)_12%,transparent)]';
+
+export const selectClass = `${inputClass} appearance-auto`;
+
+export const linkClass = 'font-medium text-ink underline decoration-line-strong underline-offset-4 transition hover:decoration-ink';

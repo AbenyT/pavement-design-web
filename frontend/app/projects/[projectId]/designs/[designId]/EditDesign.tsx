@@ -1,9 +1,8 @@
 'use client';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { DesignEditor } from '@/components/design/DesignEditor';
-import { ErrorBox, Loading, PageTitle, VerdictBadge } from '@/components/ui';
+import { BackLink, ErrorBox, Loading, PageTitle, VerdictBadge } from '@/components/ui';
 import { api, ApiError } from '@/lib/api';
 import { RequireAuth } from '@/lib/auth';
 import type { SavedDesign } from '@/lib/types';
@@ -26,9 +25,7 @@ function EditDesignContent() {
 
   return (
     <>
-      <p className="mb-2 text-sm">
-        <Link href={`/projects/${projectId}`} className="text-blue-700 hover:underline">← {design.project.name}</Link>
-      </p>
+      <BackLink href={`/projects/${projectId}`}>{design.project.name}</BackLink>
       <PageTitle title={design.name}
         subtitle={<>Saved result: <VerdictBadge adequate={design.adequate} /> · last saved {new Date(design.updatedAt).toLocaleString()}</>} />
       <DesignEditor key={design.id} initialInputs={design.inputs} initialName={design.name} saveLabel="Save changes"

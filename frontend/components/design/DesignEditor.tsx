@@ -4,6 +4,7 @@ import { api, ApiError } from '@/lib/api';
 import { DEFAULT_INPUT, withDefaults } from '@/lib/design-defaults';
 import type { DesignInput, DesignResult, LayerKey } from '@/lib/types';
 import { Button, ErrorBox, inputClass, Loading } from '../ui';
+import { Calculator } from '../icons';
 import { DesignInputsPanel } from './DesignInputsPanel';
 import { DesignResults } from './DesignResults';
 
@@ -83,9 +84,9 @@ export function DesignEditor({ initialInputs, initialName = '', onSave, saveLabe
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="shadow-card mb-6 flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-surface p-4 sm:p-5">
         {onSave && (
-          <label className="min-w-64 flex-1 text-sm text-slate-600">
+          <label className="min-w-0 flex-1 basis-64 text-sm text-muted">
             <span className="mb-1 block">Design name</span>
             <input className={inputClass} value={name} onChange={(e) => { setName(e.target.value); setSaveMessage(null); }}
               placeholder="e.g. Section A, km 12+000" maxLength={150} />
@@ -95,14 +96,15 @@ export function DesignEditor({ initialInputs, initialName = '', onSave, saveLabe
         <Button variant="secondary" onClick={() => { setInputs({ ...DEFAULT_INPUT }); setSaveMessage(null); }}>
           Reset to defaults
         </Button>
-        <span className="text-sm text-slate-500" aria-live="polite">
+        <span className="inline-flex items-center gap-2 text-sm text-muted" aria-live="polite">
+          {calculating && <Calculator size={15} className="animate-pulse" />}
           {calculating ? 'Calculating…' : saveMessage}
         </span>
       </div>
 
       <ErrorBox title="Please check these inputs" messages={errors} />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(320px,420px)_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(320px,400px)_1fr]">
         <DesignInputsPanel inputs={inputs} result={result} update={update} setValidity={setValidity} />
         <div className="min-w-0">
           {result ? (

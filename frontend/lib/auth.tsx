@@ -82,7 +82,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
     if (status === 'signed-out') router.replace('/login');
   }, [status, router]);
   if (!mounted || status !== 'signed-in') {
-    return <div className="py-24 text-center text-slate-500">Checking your sign-in…</div>;
+    return <div className="py-24 text-center text-sm text-muted">Checking your sign-in…</div>;
   }
   return <>{children}</>;
 }

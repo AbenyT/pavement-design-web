@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { Button, ButtonLink, Card, EmptyState, ErrorBox, inputClass, Loading, PageTitle, VerdictBadge } from '@/components/ui';
+import { BackLink, Button, ButtonLink, Card, EmptyState, ErrorBox, inputClass, Loading, PageTitle, VerdictBadge } from '@/components/ui';
 import { api, ApiError } from '@/lib/api';
 import { RequireAuth } from '@/lib/auth';
 import { fixed } from '@/lib/design-defaults';
@@ -58,14 +58,14 @@ function ProjectContent() {
 
   return (
     <>
-      <p className="mb-2 text-sm"><Link href="/projects" className="text-blue-700 hover:underline">← All projects</Link></p>
+      <BackLink href="/projects">All projects</BackLink>
       {editing ? (
         <Card className="mb-6">
           <form onSubmit={saveProject} className="flex flex-wrap items-end gap-3">
-            <label className="min-w-56 flex-1 text-sm text-slate-600">Name
+            <label className="min-w-56 flex-1 text-sm text-muted">Name
               <input className={`${inputClass} mt-1`} value={name} onChange={(e) => setName(e.target.value)} required maxLength={150} />
             </label>
-            <label className="min-w-48 flex-1 text-sm text-slate-600">Location
+            <label className="min-w-48 flex-1 text-sm text-muted">Location
               <input className={`${inputClass} mt-1`} value={location} onChange={(e) => setLocation(e.target.value)} maxLength={150} />
             </label>
             <Button type="submit">Save</Button>
@@ -89,10 +89,10 @@ function ProjectContent() {
           <ButtonLink href={`/projects/${project.id}/designs/new`}>Create the first design</ButtonLink>
         </EmptyState>
       ) : (
-        <Card className="overflow-x-auto p-0">
+        <Card className="overflow-x-auto p-0 sm:p-0">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-xs uppercase tracking-wide text-slate-500">
+              <tr className="border-b border-line text-left text-xs uppercase tracking-[0.1em] text-muted">
                 <th className="px-5 py-3">Design</th><th className="px-3">Verdict</th><th className="px-3">Total SN</th>
                 <th className="px-3">Required SN</th><th className="px-3">Thickness</th><th className="px-3">Layers</th>
                 <th className="px-3">Updated</th><th className="px-5" />
@@ -100,18 +100,18 @@ function ProjectContent() {
             </thead>
             <tbody className="tabular-nums">
               {project.designs.map((d) => (
-                <tr key={d.id} className="border-b border-slate-100 last:border-0">
+                <tr key={d.id} className="border-b border-line last:border-0">
                   <td className="px-5 py-3">
-                    <Link href={`/projects/${project.id}/designs/${d.id}`} className="font-medium text-slate-800 hover:text-blue-700 hover:underline">{d.name}</Link>
+                    <Link href={`/projects/${project.id}/designs/${d.id}`} className="font-medium text-ink hover:underline underline-offset-4">{d.name}</Link>
                   </td>
                   <td className="px-3"><VerdictBadge adequate={d.adequate} /></td>
                   <td className="px-3">{fixed(d.totalSn)}</td>
                   <td className="px-3">{fixed(d.requiredSn)}</td>
                   <td className="px-3">{fixed(d.totalThicknessMm, 1)} mm</td>
                   <td className="px-3">{d.layerCount}</td>
-                  <td className="px-3 text-slate-500">{new Date(d.updatedAt).toLocaleDateString()}</td>
+                  <td className="px-3 text-muted">{new Date(d.updatedAt).toLocaleDateString()}</td>
                   <td className="px-5 text-right">
-                    <button onClick={() => deleteDesign(d.id, d.name)} className="text-xs text-red-700 hover:underline">Delete</button>
+                    <button onClick={() => deleteDesign(d.id, d.name)} className="text-xs text-bad hover:underline">Delete</button>
                   </td>
                 </tr>
               ))}

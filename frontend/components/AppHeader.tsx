@@ -1,8 +1,12 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { useAuth } from '@/lib/auth';
+import { mailto, SITE } from '@/lib/site';
 import { useIsClient } from '@/lib/use-is-client';
+import { Close, LogoMark, Menu } from './icons';
+import { ThemeToggle } from './ThemeToggle';
 
 const NAV = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -10,44 +14,96 @@ const NAV = [
   { href: '/calculator', label: 'Quick calculator' },
 ];
 
+const pill = 'inline-flex h-10 items-center rounded-full px-4 text-sm font-medium transition';
+
 export function AppHeader() {
   const { status: authStatus, user, logout } = useAuth();
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   // The server cannot know whether the browser holds a sign-in token, so the first render must be
   // the neutral "loading" header on both sides; the real links appear once mounted in the browser.
   // (Without this React reports a hydration mismatch and rebuilds the page, losing typed input.)
   const status = useIsClient() ? authStatus : 'loading';
+  const close = () => setMenuOpen(false);
+
+  const links = status === 'signed-in' ? NAV
+    : status === 'signed-out' ? [{ href: '/calculator', label: 'Quick calculator' }] : [];
+
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3">
-        <Link href="/" className="leading-tight">
-          <span className="block text-lg font-semibold text-slate-900">Flexible Pavement Design</span>
-          <span className="block text-xs text-slate-500">AASHTO 1993 · layer-by-layer structural number method</span>
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-canvas/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
+        <Link href="/" onClick={close} className="flex shrink-0 items-center gap-2.5 text-ink">
+          <LogoMark size={24} />
+          <span className="leading-tight">
+            <span className="block text-[17px] font-semibold tracking-[-0.02em]">{SITE.name}</span>
+            <span className="hidden text-[11px] text-muted lg:block">{SITE.tagline}</span>
+          </span>
         </Link>
-        <p className="text-sm text-slate-500">Prepared by <strong className="font-semibold text-slate-800">Abenezer Tilahun</strong></p>
-        <nav className="flex flex-wrap items-center gap-1 text-sm">
-          {status === 'signed-in' && NAV.map((item) => (
-            <Link key={item.href} href={item.href}
-              className={`rounded-md px-3 py-1.5 ${pathname.startsWith(item.href)
-                ? 'bg-blue-50 font-medium text-blue-800' : 'text-slate-600 hover:bg-slate-100'}`}>
-              {item.label}
-            </Link>
-          ))}
+
+        <nav aria-label="Main" className="ml-auto hidden items-center gap-1 md:flex">
+          {links.map((item) => {
+            const active = pathname.startsWith(item.href);
+            return (
+              <Link key={item.href} href={item.href} aria-current={active ? 'page' : undefined}
+                className={`${pill} ${active ? 'bg-surface text-ink shadow-card' : 'text-muted hover:text-ink'}`}>
+                {item.label}
+              </Link>
+            );
+          })}
           {status === 'signed-in' && (
             <>
-              <span className="hidden px-2 text-slate-400 md:inline" title={user?.email}>{user?.name || user?.email}</span>
-              <button onClick={logout} className="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Sign out</button>
+              <span className="max-w-40 truncate px-2 text-sm text-subtle" title={user?.email}>{user?.name || user?.email}</span>
+              <button onClick={logout} className={`${pill} text-muted hover:text-ink`}>Sign out</button>
             </>
           )}
           {status === 'signed-out' && (
             <>
-              <Link href="/calculator" className="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Quick calculator</Link>
-              <Link href="/login" className="rounded-md px-3 py-1.5 text-slate-600 hover:bg-slate-100">Sign in</Link>
-              <Link href="/register" className="rounded-md bg-blue-700 px-3 py-1.5 font-medium text-white hover:bg-blue-800">Create account</Link>
+              <Link href="/login" className={`${pill} text-muted hover:text-ink`}>Sign in</Link>
+              <Link href="/register" className={`${pill} ml-1 bg-primary text-on-primary hover:bg-primary-hover`}>Create free account</Link>
             </>
           )}
+          <ThemeToggle className="ml-1" />
         </nav>
+
+        <div className="ml-auto flex items-center gap-1 md:hidden">
+          <ThemeToggle />
+          <button type="button" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-raised">
+            {menuOpen ? <Close size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
+
+      {menuOpen && (
+        <nav id="mobile-menu" aria-label="Main" className="border-t border-line bg-surface px-4 pb-4 pt-2 md:hidden">
+          <ul className="flex flex-col">
+            {links.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} onClick={close}
+                  className={`flex h-12 items-center border-b border-line text-[15px] ${pathname.startsWith(item.href) ? 'font-semibold text-ink' : 'text-muted'}`}>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <a href={mailto(`${SITE.name} — help`)} className="flex h-12 items-center border-b border-line text-[15px] text-muted">Help &amp; contact</a>
+            </li>
+          </ul>
+          {status === 'signed-in' && (
+            <div className="mt-3 flex items-center justify-between gap-3">
+              <span className="truncate text-sm text-subtle">{user?.name || user?.email}</span>
+              <button onClick={() => { close(); logout(); }} className={`${pill} border border-line-strong text-ink`}>Sign out</button>
+            </div>
+          )}
+          {status === 'signed-out' && (
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <Link href="/login" onClick={close} className={`${pill} justify-center border border-line-strong text-ink`}>Sign in</Link>
+              <Link href="/register" onClick={close} className={`${pill} justify-center bg-primary text-on-primary`}>Create account</Link>
+            </div>
+          )}
+        </nav>
+      )}
     </header>
   );
 }

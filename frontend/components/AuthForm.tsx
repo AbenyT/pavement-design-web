@@ -39,33 +39,33 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   return (
     <div className="mx-auto max-w-md py-8">
       <Card>
-        <h1 className="text-xl font-semibold text-slate-900">{isLogin ? 'Sign in' : 'Create your account'}</h1>
-        <p className="mt-1 text-sm text-slate-500">
+        <h1 className="text-xl font-semibold text-ink">{isLogin ? 'Sign in' : 'Create your account'}</h1>
+        <p className="mt-1 text-sm text-muted">
           {isLogin ? 'Welcome back.' : 'Save designs in projects and see them on your dashboard.'}
         </p>
         <form onSubmit={submit} className="mt-5 space-y-4">
           <ErrorBox title={isLogin ? 'Could not sign in' : 'Could not create the account'} messages={errors} />
           {!isLogin && (
-            <label className="block text-sm text-slate-600">Name (optional)
+            <label className="block text-sm text-muted">Name (optional)
               <input className={`${inputClass} mt-1`} value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </label>
           )}
-          <label className="block text-sm text-slate-600">Email
+          <label className="block text-sm text-muted">Email
             <input className={`${inputClass} mt-1`} type="email" required value={email}
               onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
           </label>
-          <label className="block text-sm text-slate-600">Password
+          <label className="block text-sm text-muted">Password
             <input className={`${inputClass} mt-1`} type="password" required minLength={isLogin ? 1 : 8} value={password}
               onChange={(e) => setPassword(e.target.value)} autoComplete={isLogin ? 'current-password' : 'new-password'} />
-            {!isLogin && <span className="mt-1 block text-xs text-slate-400">At least 8 characters.</span>}
+            {!isLogin && <span className="mt-1 block text-xs text-subtle">At least 8 characters.</span>}
           </label>
           <Button type="submit" disabled={busy} className="w-full">
             {busy ? 'Please wait…' : isLogin ? 'Sign in' : 'Create account'}
           </Button>
         </form>
-        <p className="mt-4 text-center text-sm text-slate-500">
-          {isLogin ? <>No account yet? <Link className="text-blue-700 hover:underline" href="/register">Create one</Link></>
-            : <>Already have an account? <Link className="text-blue-700 hover:underline" href="/login">Sign in</Link></>}
+        <p className="mt-4 text-center text-sm text-muted">
+          {isLogin ? <>No account yet? <Link className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink" href="/register">Create one</Link></>
+            : <>Already have an account? <Link className="font-medium text-ink underline decoration-line-strong underline-offset-4 hover:decoration-ink" href="/login">Sign in</Link></>}
         </p>
       </Card>
     </div>

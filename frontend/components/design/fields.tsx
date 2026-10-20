@@ -47,22 +47,22 @@ export function NumberField({ label, value, onChange, onValidity, hint, min, max
   };
 
   return (
-    <label className="block text-sm text-slate-600">
+    <label className="block text-sm text-muted">
       <span className={hideLabel ? 'sr-only' : 'mb-1 block'}>{label}</span>
       <span className="relative block">
         <input
           type="text" inputMode="decimal" value={text} onChange={(e) => handle(e.target.value)}
           aria-invalid={invalid}
-          className={`${inputClass} ${unit ? 'pr-12' : ''} ${invalid ? 'border-red-500 bg-red-50' : ''}`}
+          className={`${inputClass} num ${unit ? 'pr-16' : ''} ${invalid ? 'border-bad bg-bad-soft' : ''}`}
         />
-        {unit && <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-slate-400">{unit}</span>}
+        {unit && <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs text-subtle">{unit}</span>}
       </span>
       {invalid && (
-        <span className="mt-1 block text-xs text-red-700">
+        <span className="mt-1 block text-xs text-bad">
           Enter a number{min !== undefined || max !== undefined ? ` between ${min ?? '…'} and ${max ?? '…'}` : ''}
         </span>
       )}
-      {!invalid && hint && <span className="mt-1 block text-xs text-slate-400">{hint}</span>}
+      {!invalid && hint && <span className="mt-1 block text-xs text-subtle">{hint}</span>}
     </label>
   );
 }
@@ -103,7 +103,7 @@ export function ThicknessField({ label, value, placeholderMm, onChange, onValidi
       type="text" inputMode="decimal" aria-label={label} value={text} onChange={(e) => handle(e.target.value)}
       placeholder={placeholderMm === undefined ? '' : `${placeholderMm.toFixed(1)} (min)`}
       aria-invalid={invalid}
-      className={`${inputClass} w-32 ${invalid ? 'border-red-500 bg-red-50' : ''}`}
+      className={`${inputClass} num w-36 py-2 ${invalid ? 'border-bad bg-bad-soft' : ''}`}
     />
   );
 }
