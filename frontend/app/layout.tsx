@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import localFont from 'next/font/local';
 import { Suspense } from 'react';
 import { AnnouncementBar } from '@/components/AnnouncementBar';
 import { AppHeader } from '@/components/AppHeader';
@@ -7,17 +6,6 @@ import { HelpButton, SiteFooter } from '@/components/SiteFooter';
 import { AuthProvider } from '@/lib/auth';
 import { THEME_BOOT_SCRIPT } from '@/lib/theme-script';
 import './globals.css';
-
-// Both fonts are self-hosted from app/fonts/ (variable, Latin subset) and licensed under the
-// SIL Open Font License 1.1, which allows commercial use. Licence texts sit next to the files.
-const inter = localFont({
-  src: './fonts/InterVariable-latin.woff2', variable: '--font-inter', weight: '100 900', display: 'swap',
-  fallback: ['ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-});
-const jetbrains = localFont({
-  src: './fonts/JetBrainsMonoVariable-latin.woff2', variable: '--font-jetbrains', weight: '100 800', display: 'swap',
-  fallback: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
-});
 
 export const metadata: Metadata = {
   title: { default: 'Pavement Design', template: '%s · Pavement Design' },
@@ -39,7 +27,7 @@ function HeaderFallback() {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     // data-theme is set by the boot script before React hydrates, hence suppressHydrationWarning.
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className="h-full antialiased">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
       </head>

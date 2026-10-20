@@ -10,8 +10,8 @@ import { MATERIALS, PavementDefs, patternId, type MaterialKey } from './pavement
 const INK = 'currentColor';
 const BAD = 'var(--bad, #b42318)';
 const OK = 'var(--ok, #15803d)';
-const SANS = 'var(--font-inter, Inter), Inter, "Helvetica Neue", Arial, sans-serif';
-const MONO = 'var(--font-jetbrains, "JetBrains Mono"), "JetBrains Mono", Menlo, Consolas, monospace';
+const SANS = '"Times New Roman", Times, Tinos, "Liberation Serif", "Noto Serif", serif';
+const MONO = SANS;
 
 const SUB = '₀₁₂₃₄₅₆₇₈₉';
 const subscript = (symbol: string) => symbol.replace(/\d/g, (d) => SUB[Number(d)]);
@@ -246,7 +246,7 @@ function exportableSvg(svg: SVGSVGElement): { text: string; width: number; heigh
   clone.setAttribute('height', String(height + pad * 2));
   clone.removeAttribute('class');
   // Reports are printed on white: always export the light version.
-  clone.setAttribute('style', 'color:#111113;font-family:Inter,"Helvetica Neue",Arial,sans-serif');
+  clone.setAttribute('style', 'color:#111113;font-family:"Times New Roman", Times, Tinos, "Liberation Serif", "Noto Serif", serif');
   const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   bg.setAttribute('x', String(-pad)); bg.setAttribute('y', String(-pad));
   bg.setAttribute('width', String(width + pad * 2)); bg.setAttribute('height', String(height + pad * 2));

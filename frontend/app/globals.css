@@ -7,16 +7,15 @@
  * Theme: follows the operating system by default; the header toggle stores an explicit choice
  * in <html data-theme="light|dark">. Print always uses the light palette.
  *
- * Fonts (both SIL Open Font License 1.1, free for commercial use, self-hosted from app/fonts/ by next/font/local):
- *   Inter           — UI and body text      https://github.com/rsms/inter
- *   JetBrains Mono  — numbers and results   https://github.com/JetBrains/JetBrainsMono
+ * Font: Times New Roman for all text and numbers (a system font: Windows and macOS have it;
+ *       other devices fall back to a matching serif such as Tinos / Liberation Serif).
  */
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sans: "Times New Roman", Times, Tinos, "Liberation Serif", "Noto Serif", serif;
+  --font-mono: "Times New Roman", Times, Tinos, "Liberation Serif", "Noto Serif", serif;
 
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
@@ -135,7 +134,6 @@ body {
   background-image: linear-gradient(180deg, var(--canvas-top) 0, var(--canvas) 520px);
   background-repeat: no-repeat;
   color: var(--ink);
-  font-feature-settings: "cv11", "ss01";
 }
 
 ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
@@ -146,7 +144,7 @@ body {
 }
 
 /* Numbers line up in tables and results. */
-.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 .shadow-card { box-shadow: var(--shadow-card); }
 .shadow-float { box-shadow: var(--shadow-float); }

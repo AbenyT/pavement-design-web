@@ -16,15 +16,11 @@ npm run dev                  # http://localhost:3000
   Printing always uses the light palette.
 - **Site details** (name, author, email, LinkedIn): `lib/site.ts`. The LinkedIn links stay hidden until `linkedin` is set.
 
-## Fonts and licences (commercial use)
+## Font
 
-| Font | Used for | Licence | Files |
-|---|---|---|---|
-| [Inter](https://github.com/rsms/inter) (variable) | UI and body text | SIL Open Font License 1.1 | `app/fonts/InterVariable-latin.woff2`, licence `app/fonts/Inter-OFL.txt` |
-| [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) (variable) | Numbers and results | SIL Open Font License 1.1 | `app/fonts/JetBrainsMonoVariable-latin.woff2`, licence `app/fonts/JetBrainsMono-OFL.txt` |
-
-Both are self-hosted with `next/font/local` (no request to Google at build time or in the browser). The OFL allows
-commercial use, embedding and self-hosting; keep the licence files next to the font files.
+All text and numbers use **Times New Roman** (set in `app/globals.css` as `--font-sans` / `--font-mono`, and in
+`components/design/Charts.tsx` for the drawings). It is a system font, so nothing is downloaded: Windows and macOS
+have it, other devices fall back to a matching serif (Tinos, Liberation Serif, Noto Serif).
 
 ## Images
 
